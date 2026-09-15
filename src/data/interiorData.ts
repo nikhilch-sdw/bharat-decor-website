@@ -344,8 +344,9 @@ export const REVIEWS_DATA: ReviewItem[] = [
     location: 'Shastri Nagar, Meerut',
     rating: 5,
     projectType: 'Turnkey 4BHK Villa Interior',
-    comment: 'Bharat Decor transformed our bare villa into our dream sanctuary. From the 3D renders to the final handover, their transparency in material specs (Century Marine Ply, Hafele hardware) gave us absolute peace of mind. Delivered on the exact promised date!',
-    date: 'January 2025'
+    comment: 'Bharat Decor transformed our bare villa into our dream sanctuary. From the 3D renders to final handover, transparency in Century Marine Ply and Hafele hardware gave us total peace of mind. Delivered on the exact promised date!',
+    date: 'January 2025',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'rev-2',
@@ -353,8 +354,9 @@ export const REVIEWS_DATA: ReviewItem[] = [
     location: 'Konark Colony, Roorkee Road, Meerut',
     rating: 5,
     projectType: 'Modular Kitchen & Charcoal Paneling',
-    comment: 'Having Bharat Decor right on Roorkee Road was extremely convenient. The team installed our modular kitchen and living room charcoal fluted panels within just 18 days. The soft-close fittings and quartz finish are impeccable.',
-    date: 'December 2024'
+    comment: 'Having Bharat Decor right on Roorkee Road was extremely convenient. The team installed our modular island kitchen and living room charcoal fluted panels within just 18 days. The soft-close fittings and quartz finish are impeccable.',
+    date: 'December 2024',
+    image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'rev-3',
@@ -362,8 +364,39 @@ export const REVIEWS_DATA: ReviewItem[] = [
     location: 'Saket, Meerut',
     rating: 5,
     projectType: 'Master Suite & Designer Wallpapers',
-    comment: 'Their wallpaper catalog is unmatched in Meerut. The 3D textured imported wall coverings and motorized drapes created a luxury hotel ambiance right at home. The installation crew was polite, tidy, and very professional.',
-    date: 'November 2024'
+    comment: 'Their wallpaper and louver catalog is unmatched in Meerut. The 3D textured imported wall coverings and motorized drapes created a luxury hotel ambiance right at home. The installation crew was polite, tidy, and very professional.',
+    date: 'November 2024',
+    image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    id: 'rev-4',
+    name: 'Gaurav & Neha Bansal',
+    location: 'Pallavpuram, Meerut',
+    rating: 5,
+    projectType: 'False Ceiling & Architectural Lighting',
+    comment: 'The lighting layers and cove details in our double-height hall look spectacular at night. Bharat Decor planned both warm ambient profiles and functional task lighting with zero shadows. Highly recommended in Meerut!',
+    date: 'October 2024',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    id: 'rev-5',
+    name: 'Col. Sanjeev Tyagi (Retd.)',
+    location: 'Ganga Nagar, Meerut',
+    rating: 5,
+    projectType: 'Living Lounge & Louver Accent Wall',
+    comment: 'Flawless execution and military-grade punctuality. The acoustic fluted wall louvers behind our OLED TV look ultra-modern and eliminate echo completely. Their on-site supervision and material transparency were top tier.',
+    date: 'September 2024',
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    id: 'rev-6',
+    name: 'Ananya & Rohit Singhal',
+    location: 'Victoria Park Road, Meerut',
+    rating: 5,
+    projectType: 'Bespoke Wardrobes & Dressing Area',
+    comment: 'Full floor-to-ceiling tinted glass wardrobes with integrated sensor LEDs. Bharat Decor customized every internal drawer organizer to our exact needs. Premium craftsmanship, smooth soft-close action, and great after-sales support.',
+    date: 'August 2024',
+    image: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=900&q=80',
   },
 ];
 

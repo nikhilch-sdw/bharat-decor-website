@@ -57,22 +57,22 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
           </p>
         </div>
 
-        {/* 5 Categories Quick Filter & Navigation Bar */}
+        {/* Categories Quick Filter & Navigation Bar */}
         <div className="mt-8 pt-4 border-t border-[#E8E1D2]">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-3 custom-horizontal-scrollbar">
             <span className="text-xs text-[#8A8174] font-semibold uppercase tracking-wider shrink-0 mr-2">
               Categories:
             </span>
             <button
               id="services-cat-all"
               onClick={() => setActiveCategoryFilter('All')}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${
+              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all ${
                 activeCategoryFilter === 'All'
                   ? 'bg-[#1E2229] text-white shadow-sm'
                   : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
               }`}
             >
-              All Categories (5)
+              All Categories ({CATEGORIES_LIST.length})
             </button>
             {CATEGORIES_LIST.map((cat, cIdx) => {
               const isActive = activeCategoryFilter === cat;
@@ -81,7 +81,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   key={cat}
                   id={`services-cat-btn-${cIdx}`}
                   onClick={() => setActiveCategoryFilter(cat)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${
+                  className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all ${
                     isActive
                       ? 'bg-[#1E2229] text-white shadow-sm'
                       : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
@@ -91,6 +91,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 </button>
               );
             })}
+            <div className="w-4 shrink-0" aria-hidden="true" />
           </div>
         </div>
       </section>

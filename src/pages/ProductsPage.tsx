@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { PageId, ProductCategory, ProductItem } from '../types';
 import { PRODUCT_CATEGORIES, PRODUCTS_DATA, STUDIO_INFO } from '../data/interiorData';
 import { ProductDetailModal } from '../components/ProductDetailModal';
-import { Instagram, MessageCircle, Eye, Search, Filter, ArrowUpRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Instagram, MessageCircle, Eye, Search, Filter, ArrowUpRight, Sparkles, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProductsPageProps {
   onNavigate: (page: PageId) => void;
@@ -15,8 +15,18 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
   const [activeCategory, setActiveCategory] = useState<FilterTab>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
 
   const tabs: FilterTab[] = ['All', ...PRODUCT_CATEGORIES];
+
+  const scrollTabs = (direction: 'left' | 'right') => {
+    if (tabsContainerRef.current) {
+      tabsContainerRef.current.scrollBy({
+        left: direction === 'left' ? -220 : 220,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS_DATA.filter((product) => {
@@ -74,35 +84,59 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ onNavigate, onSelect
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <div className="flex items-center gap-1.5 text-xs text-[#8A8174] mr-1 shrink-0 font-medium">
-              <Filter className="w-3.5 h-3.5 text-[#C5A880]" />
-              <span className="hidden sm:inline">Category:</span>
-            </div>
-            {tabs.map((tab) => {
-              const isActive = activeCategory === tab;
-              const count =
-                tab === 'All'
-                  ? PRODUCTS_DATA.length
-                  : PRODUCTS_DATA.filter((p) => p.category === tab).length;
+          <div className="relative flex-1 min-w-0 flex items-center gap-1.5">
+            <button
+              onClick={() => scrollTabs('left')}
+              className="hidden sm:flex shrink-0 w-7 h-7 rounded-full bg-white border border-[#DDD4C4] text-[#1E2229] hover:bg-[#FAF8F5] hover:border-[#C5A880] items-center justify-center shadow-xs transition-colors"
+              title="Scroll Left"
+              aria-label="Scroll categories left"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 text-[#8A6D47]" />
+            </button>
 
-              return (
-                <button
-                  key={tab}
-                  onClick={() => setActiveCategory(tab)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${
-                    isActive
-                      ? 'bg-[#1E2229] text-white shadow-sm'
-                      : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
-                  }`}
-                >
-                  <span>{tab}</span>
-                  <span className={`ml-1.5 text-[11px] ${isActive ? 'text-[#C5A880]' : 'text-[#8A8174]'}`}>
-                    ({count})
-                  </span>
-                </button>
-              );
-            })}
+            <div
+              ref={tabsContainerRef}
+              className="flex-1 flex items-center gap-2 overflow-x-auto pb-3 pt-1 px-1 custom-horizontal-scrollbar scroll-smooth"
+            >
+              <div className="flex items-center gap-1.5 text-xs text-[#8A8174] mr-1 shrink-0 font-medium">
+                <Filter className="w-3.5 h-3.5 text-[#C5A880]" />
+                <span className="hidden sm:inline">Category:</span>
+              </div>
+              {tabs.map((tab) => {
+                const isActive = activeCategory === tab;
+                const count =
+                  tab === 'All'
+                    ? PRODUCTS_DATA.length
+                    : PRODUCTS_DATA.filter((p) => p.category === tab).length;
+
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveCategory(tab)}
+                    className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all ${
+                      isActive
+                        ? 'bg-[#1E2229] text-white shadow-sm'
+                        : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
+                    }`}
+                  >
+                    <span>{tab}</span>
+                    <span className={`ml-1.5 text-[11px] ${isActive ? 'text-[#C5A880]' : 'text-[#8A8174]'}`}>
+                      ({count})
+                    </span>
+                  </button>
+                );
+              })}
+              <div className="w-4 shrink-0" aria-hidden="true" />
+            </div>
+
+            <button
+              onClick={() => scrollTabs('right')}
+              className="hidden sm:flex shrink-0 w-7 h-7 rounded-full bg-white border border-[#DDD4C4] text-[#1E2229] hover:bg-[#FAF8F5] hover:border-[#C5A880] items-center justify-center shadow-xs transition-colors"
+              title="Scroll Right"
+              aria-label="Scroll categories right"
+            >
+              <ChevronRight className="w-3.5 h-3.5 text-[#8A6D47]" />
+            </button>
           </div>
 
           {/* Search Box */}

@@ -64,6 +64,8 @@ export interface ReviewItem {
   projectType: string;
   comment: string;
   date: string;
+  image: string;
+  avatar?: string;
 }
 
 export interface InquiryFormData {

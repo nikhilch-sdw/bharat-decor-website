@@ -4,6 +4,7 @@ import { STUDIO_INFO, QUICK_STATS, SERVICES_DATA, PORTFOLIO_DATA, REVIEWS_DATA, 
 import { Sparkles, ArrowRight, Star, ShieldCheck, CheckCircle2, Award, Clock, ArrowUpRight, MapPin, ChevronLeft, ChevronRight, Pause, Play, PhoneCall, Layers, Palette, LayoutGrid, SunDim, Lightbulb, Compass, MessageCircle } from 'lucide-react';
 import { ProductCatalogSection } from '../components/ProductCatalogSection';
 import { ProductDetailModal } from '../components/ProductDetailModal';
+import { TestimonialSlider } from '../components/TestimonialSlider';
 
 interface HomePageProps {
   onNavigate: (page: PageId, serviceId?: string) => void;
@@ -499,49 +500,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenProjectMod
         </div>
       </section>
 
-      {/* 5. CLIENT REVIEWS / TESTIMONIALS */}
+      {/* 5. CLIENT REVIEWS / TESTIMONIALS SLIDER (2 BOXES IN A ROW WITH LEFT IMAGE & RIGHT TESTIMONIAL) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-xs uppercase tracking-widest text-[#8A6D47] font-bold block mb-2">
-            Verified Client Feedback
-          </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#1E2229] mb-3">
-            What Homeowners in Meerut Say
-          </h2>
-          <p className="text-sm text-[#5D554B]">
-            Real feedback from homeowners and commercial clients who trusted Bharat Decor with their spaces.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {REVIEWS_DATA.map((review) => (
-            <div
-              key={review.id}
-              className="bg-white rounded-xl p-7 border border-[#E7E1D4] shadow-sm flex flex-col justify-between space-y-6 relative"
-            >
-              <div>
-                <div className="flex items-center gap-1 mb-4 text-[#C5A880]">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#C5A880]" />
-                  ))}
-                </div>
-                <p className="text-sm text-[#3E3830] leading-relaxed italic">
-                  "{review.comment}"
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#F0EBE0]">
-                <h4 className="font-semibold text-sm text-[#1E2229]">
-                  {review.name}
-                </h4>
-                <div className="flex items-center justify-between text-xs text-[#7A7165] mt-1">
-                  <span>{review.location}</span>
-                  <span className="text-[11px] text-[#8A6D47] font-medium">{review.projectType}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <TestimonialSlider reviews={REVIEWS_DATA} />
       </section>
 
       {/* 6. RENOVATION CTA BANNER */}
