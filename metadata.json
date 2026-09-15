@@ -1,0 +1,8 @@
+{
+  "name": "Bharat Decor - Luxury Interior Design",
+  "description": "Modern bespoke turnkey interiors, designer wallpapers, modular kitchens, and fluted paneling in Meerut.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
