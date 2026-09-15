@@ -2,6 +2,7 @@ import React from 'react';
 import { PageId } from '../types';
 import { STUDIO_INFO, SERVICES_DATA } from '../data/interiorData';
 import { MapPin, Phone, Mail, Instagram, MessageCircle, Clock, Shield, ArrowRight } from 'lucide-react';
+import { BharatDecorLogo } from './BharatDecorLogo';
 
 interface FooterProps {
   onNavigate: (page: PageId, serviceId?: string) => void;
@@ -14,19 +15,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Column 1: Brand & Identity */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#262B33] flex items-center justify-center text-[#C5A880] font-serif-luxury font-bold text-xl border border-[#C5A880]/30">
-                BD
-              </div>
-              <div>
-                <span className="block font-serif-luxury text-2xl font-bold tracking-wider text-[#FAF9F6]">
-                  BHARAT DECOR
-                </span>
-                <span className="block text-[10px] tracking-[0.25em] text-[#A69B8D] uppercase font-semibold">
-                  Interior Studio • Meerut
-                </span>
-              </div>
-            </div>
+            <button
+              onClick={() => onNavigate('home')}
+              className="text-left focus:outline-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              aria-label="Bharat Decor Home"
+            >
+              <BharatDecorLogo className="h-10" theme="dark" />
+            </button>
 
             <p className="text-sm text-[#A69B8D] leading-relaxed pt-2">
               Transforming residential villas, luxury apartments, and corporate offices across Meerut with bespoke turnkey execution, premium materials, and timeless aesthetic restraint.

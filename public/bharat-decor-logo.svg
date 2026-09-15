@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 76" width="100%" height="100%">
+  <defs>
+    <!-- Premium Metallic Gold Gradient matching uploaded logo -->
+    <linearGradient id="bharatGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7C844" />
+      <stop offset="25%" stop-color="#EAA816" />
+      <stop offset="50%" stop-color="#F5C43C" />
+      <stop offset="75%" stop-color="#D79007" />
+      <stop offset="100%" stop-color="#ECA918" />
+    </linearGradient>
+
+    <!-- Clip path for the Top Bowl of the 'B' monogram -->
+    <clipPath id="topBowlClip">
+      <path d="M 12,8 L 46,8 C 58,8 65,15 65,24 C 65,33 58,39 46,39 L 12,39 Z" />
+    </clipPath>
+  </defs>
+
+  <!-- ==================== EMBLEM 'B' ==================== -->
+  <!-- Left Vertical Spine -->
+  <rect x="10" y="8" width="11" height="60" rx="3" fill="url(#bharatGold)" />
+
+  <!-- Top Bowl with 45-degree Diagonal Hatch Stripes -->
+  <g clip-path="url(#topBowlClip)">
+    <!-- Diagonal Stripes Pattern -->
+    <line x1="8" y1="20" x2="32" y2="-4" stroke="url(#bharatGold)" stroke-width="5" stroke-linecap="round" />
+    <line x1="16" y1="30" x2="44" y2="2" stroke="url(#bharatGold)" stroke-width="5.5" stroke-linecap="round" />
+    <line x1="26" y1="40" x2="56" y2="10" stroke="url(#bharatGold)" stroke-width="5.5" stroke-linecap="round" />
+    <line x1="38" y1="48" x2="68" y2="18" stroke="url(#bharatGold)" stroke-width="5.5" stroke-linecap="round" />
+    <line x1="50" y1="56" x2="78" y2="28" stroke="url(#bharatGold)" stroke-width="5" stroke-linecap="round" />
+  </g>
+
+  <!-- Bottom Bowl: Clean Hollow Contour -->
+  <path
+    d="M 12,38 L 47,38 C 60,38 68,45 68,54 C 68,62 60,68 47,68 L 12,68"
+    fill="none"
+    stroke="url(#bharatGold)"
+    stroke-width="7"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+
+  <!-- ==================== BRAND TEXT "BHARAT DECOR" ==================== -->
+  <g fill="url(#bharatGold)">
+    <text
+      x="88"
+      y="50"
+      font-family="system-ui, -apple-system, 'Plus Jakarta Sans', 'Montserrat', 'Segoe UI', sans-serif"
+      font-size="34"
+      font-weight="800"
+      letter-spacing="0.12em"
+    >BHARAT DECOR</text>
+  </g>
+</svg>

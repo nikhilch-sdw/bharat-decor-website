@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageId } from '../types';
 import { STUDIO_INFO } from '../data/interiorData';
 import { Phone, MapPin, Clock, Menu, X, ArrowUpRight, Sparkles, Instagram } from 'lucide-react';
+import { BharatDecorLogo } from './BharatDecorLogo';
 
 interface NavbarProps {
   currentPage: PageId;
@@ -68,23 +69,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Brand Logo */}
+          {/* Real Brand Logo */}
           <button
             id="brand-logo-btn"
             onClick={() => handleLinkClick('home')}
-            className="flex items-center gap-3 text-left group focus:outline-none"
+            className="flex items-center text-left group focus:outline-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            aria-label="Bharat Decor Home"
           >
-            <div className="w-11 h-11 rounded-lg bg-[#1E2229] flex items-center justify-center text-[#C5A880] font-serif-luxury font-bold text-xl border border-[#C5A880]/30 shadow-sm group-hover:border-[#C5A880] transition-colors">
-              BD
-            </div>
-            <div>
-              <span className="block font-serif-luxury text-2xl font-bold tracking-wider text-[#1E2229] group-hover:text-[#9F7E54] transition-colors">
-                BHARAT DECOR
-              </span>
-              <span className="block text-[10px] tracking-[0.25em] text-[#786E65] uppercase font-semibold">
-                Luxury Interiors • Meerut
-              </span>
-            </div>
+            <BharatDecorLogo className="h-10 sm:h-11" theme="light" />
           </button>
 
           {/* Desktop Nav Links */}
