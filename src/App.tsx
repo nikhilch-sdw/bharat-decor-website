@@ -25,14 +25,25 @@ export default function App() {
   const [targetServiceId, setTargetServiceId] = useState<string | undefined>(undefined);
   const [inquirySubmission, setInquirySubmission] = useState<InquirySubmission | null>(null);
 
-  // Navigate function with smooth scroll to top
+  // Navigate function: immediately resets scroll to top so the page opens directly at the top
   const handleNavigate = (page: PageId, serviceId?: string) => {
     if (serviceId) {
       setTargetServiceId(serviceId);
+    } else {
+      setTargetServiceId(undefined);
     }
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   };
+
+  // Double guarantee: whenever currentPage changes, directly reset scroll to the top
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [currentPage]);
 
   const handleSelectServiceForInquiry = (serviceTitle: string) => {
     setSelectedServiceForInquiry(serviceTitle);

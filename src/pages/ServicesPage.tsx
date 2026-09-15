@@ -50,7 +50,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
             Signature Design & Execution
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-[#1E2229] mb-4">
-            5 Core Products & Interior Services
+            Signature Interior Services & Architectural Solutions
           </h1>
           <p className="text-base sm:text-lg text-[#554E45] leading-relaxed">
             From architectural wall louvers and imported 3D wallpaper to ergonomic modular kitchens, motorized drapes, and complete turnkey transformations in Meerut.

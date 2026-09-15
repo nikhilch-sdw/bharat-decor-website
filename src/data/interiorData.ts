@@ -240,7 +240,7 @@ export const PORTFOLIO_DATA: PortfolioItem[] = [
     id: 'project-2',
     title: 'Contemporary Champagne & Quartz Kitchen',
     category: 'Modular Kitchens & Wardrobes',
-    image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80',
     location: 'Pallavpuram, Meerut',
     year: '2025',
     scope: 'Island Modular Kitchen & Pantry',

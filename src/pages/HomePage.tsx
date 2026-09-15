@@ -213,7 +213,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenProjectMod
         </div>
       </section>
 
-      {/* 3. 6 CORE INTERIOR DESIGN & EXECUTION SERVICES OVERVIEW */}
+      {/* 3. CURATED CLIENT INSTAGRAM PRODUCTS CATALOG (@bharatdecor_mrt) WITH CATEGORY TABS */}
+      <ProductCatalogSection
+        onNavigate={onNavigate}
+        onSelectProduct={(product) => setSelectedProduct(product)}
+      />
+
+      {/* 4. 6 CORE INTERIOR DESIGN & EXECUTION SERVICES OVERVIEW */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
@@ -362,78 +368,133 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenProjectMod
         </div>
       </section>
 
-      {/* 4. CURATED CLIENT INSTAGRAM PRODUCTS CATALOG (@bharatdecor_mrt) WITH CATEGORY TABS */}
-      <ProductCatalogSection
-        onNavigate={onNavigate}
-        onSelectProduct={(product) => setSelectedProduct(product)}
-      />
-
-      {/* 5. RECENT PROJECTS GALLERY PREVIEW */}
+      {/* 5. RECENT COMPLETED HOMES & TRANSFORMATIONS (HIGH UTILITY, MINIMAL TEXT, PURE ARCHITECTURAL PHOTOGRAPHY) */}
       <section className="bg-[#F3EFE7] py-16 sm:py-20 border-y border-[#E4DCCF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs uppercase tracking-widest text-[#8A6D47] font-bold block mb-2">
-                Curated Work in Meerut
-              </span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EDE6D8] border border-[#D8CEBD] text-xs font-semibold uppercase tracking-wider text-[#8A6D47] mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
+                <span>Real Transformations • Meerut & Western UP</span>
+              </div>
               <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#1E2229]">
-                Featured Architecture & Living Spaces
+                Recent Completed Homes & Signature Spaces
               </h2>
+              <p className="text-sm text-[#665D52] mt-1.5 max-w-2xl">
+                Explore real residential projects recently designed and handed over by Bharat Decor across Shastri Nagar, Pallavpuram, Saket, and Ganga Nagar.
+              </p>
             </div>
             <button
               id="home-view-all-projects-btn"
               onClick={() => onNavigate('portfolio')}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1E2229] hover:text-[#9F7E54] transition-colors group"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1E2229] hover:text-[#9F7E54] transition-colors group self-start md:self-end"
             >
-              <span>Explore Complete Gallery</span>
+              <span>Explore All Completed Homes</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#C5A880]" />
             </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProjects.map((project) => (
-              <div
-                key={project.id}
-                onClick={() => onOpenProjectModal(project)}
-                className="bg-white rounded-xl overflow-hidden border border-[#E0D7C8] shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col"
-              >
-                <div className="relative h-60 overflow-hidden bg-[#E2DACB]">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E2229]/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-[#1E2229] text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                    {project.category}
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <span className="flex items-center gap-1 text-[11px] text-[#E2CDAE]">
-                      <MapPin className="w-3 h-3 text-[#C5A880]" />
-                      {project.location}
-                    </span>
-                  </div>
-                </div>
+            {featuredProjects.map((project) => {
+              const whatsAppProjectUrl = `https://wa.me/${STUDIO_INFO.whatsappNumber}?text=${encodeURIComponent(
+                `Hello Bharat Decor, I saw your "${project.title}" project in ${project.location}. Can you share estimate and timeline details for a similar space in Meerut?`
+              )}`;
 
-                <div className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-serif-luxury text-base font-bold text-[#1E2229] mb-1 group-hover:text-[#9F7E54] transition-colors line-clamp-1">
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-[#6B6357] line-clamp-2">
-                      {project.description}
-                    </p>
+              return (
+                <div
+                  key={project.id}
+                  className="bg-white rounded-2xl overflow-hidden border border-[#E0D7C8] shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col justify-between hover:-translate-y-1"
+                >
+                  {/* Visual Image Banner with Location Pin & Status */}
+                  <div
+                    onClick={() => onOpenProjectModal(project)}
+                    className="relative h-64 overflow-hidden bg-[#E2DACB] cursor-pointer"
+                  >
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#16191E]/85 via-[#16191E]/20 to-transparent pointer-events-none" />
+
+                    {/* Category & Handover Year Tag */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                      <span className="bg-[#1E2229]/85 backdrop-blur-md text-[#FAF9F6] text-[10px] font-semibold px-2.5 py-1 rounded-md border border-white/10 shadow-sm">
+                        {project.category}
+                      </span>
+                      <span className="bg-white/90 backdrop-blur-md text-[#1E2229] font-mono text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                        {project.year}
+                      </span>
+                    </div>
+
+                    {/* Bottom Location Indicator */}
+                    <div className="absolute bottom-3 left-3 right-3 text-white flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-white/95 bg-[#1E2229]/75 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
+                        <MapPin className="w-3.5 h-3.5 text-[#C5A880]" />
+                        <span>{project.location}</span>
+                      </span>
+                      <span className="text-[10px] font-medium text-[#C5A880] bg-[#1E2229]/85 px-2 py-0.5 rounded">
+                        Handover Done
+                      </span>
+                    </div>
                   </div>
-                  <div className="pt-3 mt-3 border-t border-[#F0EBE0] flex items-center justify-between text-[11px]">
-                    <span className="text-[#8C8378]">{project.year}</span>
-                    <span className="text-[#1E2229] font-medium flex items-center gap-1 group-hover:text-[#9F7E54]">
-                      View Details <ArrowUpRight className="w-3 h-3 text-[#C5A880]" />
-                    </span>
+
+                  {/* Clean, Minimal Card Body (No paragraph walls) */}
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3.5">
+                    <div>
+                      <h3
+                        onClick={() => onOpenProjectModal(project)}
+                        className="font-serif-luxury text-lg font-bold text-[#1E2229] group-hover:text-[#8A6D47] transition-colors cursor-pointer line-clamp-1"
+                      >
+                        {project.title}
+                      </h3>
+                      <p className="text-xs text-[#8A6D47] font-semibold mt-0.5">
+                        {project.scope}
+                      </p>
+
+                      {/* Quick Specification Chips */}
+                      <div className="flex flex-wrap gap-1.5 mt-2.5">
+                        {project.highlights.slice(0, 2).map((item, hIdx) => (
+                          <span
+                            key={hIdx}
+                            className="inline-flex items-center text-[10px] font-medium bg-[#FAF8F5] text-[#554E45] border border-[#E7E1D4] px-2 py-0.5 rounded-md"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Interactive Action Bar */}
+                    <div className="pt-3 border-t border-[#F0EBE0] flex items-center gap-2">
+                      <button
+                        onClick={() => onOpenProjectModal(project)}
+                        className="flex-1 py-2 px-3 rounded-xl bg-[#FAF8F5] group-hover:bg-[#1E2229] border border-[#E2DAD0] group-hover:border-[#1E2229] text-[#1E2229] group-hover:text-white transition-all text-xs font-semibold flex items-center justify-between"
+                      >
+                        <span>View Specs</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-[#C5A880]" />
+                      </button>
+
+                      <a
+                        href={whatsAppProjectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-xl border border-[#D5CEBF] text-[#25D366] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-colors"
+                        title={`Ask about ${project.title}`}
+                        aria-label="Inquire on WhatsApp"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
