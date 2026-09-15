@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { PageId, PortfolioItem, InteriorCategory } from '../types';
 import { PORTFOLIO_DATA, CATEGORIES_LIST, STUDIO_INFO } from '../data/interiorData';
 import {
@@ -18,6 +18,8 @@ import {
   X,
   ShieldCheck,
   Clock,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 interface PortfolioPageProps {
@@ -33,6 +35,46 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onOpenProjectModal
   const [selectedLocality, setSelectedLocality] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<ViewMode>('bento');
+
+  // Category horizontal scroll controls
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = () => {
+    if (tabsContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+      setCanScrollLeft(scrollLeft > 4);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = tabsContainerRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll, { passive: true });
+    }
+    window.addEventListener('resize', checkScroll);
+    return () => {
+      if (el) el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, []);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (tabsContainerRef.current) {
+      const offset = direction === 'left' ? -260 : 260;
+      tabsContainerRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
+
+  const handleSelectCategory = (cat: FilterCategory, e?: React.MouseEvent<HTMLButtonElement>) => {
+    setActiveCategory(cat);
+    if (e?.currentTarget) {
+      e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  };
 
   // Distinct localities extracted from portfolio projects
   const localities = useMemo(() => {
@@ -306,41 +348,86 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onOpenProjectModal
             </div>
           </div>
 
-          {/* Bottom Row: Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 scrollbar-none border-t border-[#F2ECE2]">
-            <div className="flex items-center gap-1 text-xs text-[#8A8174] mr-1 shrink-0 font-medium">
-              <SlidersHorizontal className="w-3 h-3 text-[#C5A880]" />
-              <span className="hidden sm:inline">Category:</span>
-            </div>
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat;
-              const count =
-                cat === 'All'
-                  ? PORTFOLIO_DATA.length
-                  : PORTFOLIO_DATA.filter((p) => p.category === cat).length;
+          {/* Bottom Row: Category Filter Pills with Visible Scrollbar & Scroll Controls */}
+          <div className="pt-2 border-t border-[#F2ECE2]">
+            <div className="flex items-center gap-2">
+              {/* Category Label */}
+              <div className="flex items-center gap-1.5 text-xs text-[#8A8174] shrink-0 font-semibold pr-1">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#C5A880]" />
+                <span className="hidden sm:inline">Category:</span>
+              </div>
 
-              return (
-                <button
-                  key={cat}
-                  id={`filter-pill-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 flex items-center gap-1.5 ${
-                    isActive
-                      ? 'bg-[#1E2229] text-white shadow-xs'
-                      : 'bg-[#FAF9F6] text-[#5D554B] border border-[#E2D9CB] hover:border-[#C5A880] hover:text-[#1E2229]'
-                  }`}
-                >
-                  <span>{cat}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-[#ECE5D8] text-[#7A6F62]'
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+              {/* Scroll Left Button */}
+              <button
+                type="button"
+                onClick={() => handleScroll('left')}
+                disabled={!canScrollLeft}
+                aria-label="Scroll categories left"
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all border ${
+                  canScrollLeft
+                    ? 'bg-white hover:bg-[#1E2229] hover:text-white text-[#5D554B] border-[#D8CEBC] shadow-2xs hover:scale-105 active:scale-95 cursor-pointer'
+                    : 'bg-[#F7F4EE] text-[#C4BBAF] border-[#E8DFC8] opacity-40 cursor-default'
+                }`}
+                title="Scroll left"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              {/* Scrollable Tabs Track with Visible Horizontal Scrollbar */}
+              <div
+                ref={tabsContainerRef}
+                className="custom-horizontal-scrollbar flex-1 flex items-center gap-2 overflow-x-auto pb-2.5 pt-1 scroll-smooth"
+                tabIndex={0}
+                role="region"
+                aria-label="Filter portfolio categories"
+              >
+                {categories.map((cat) => {
+                  const isActive = activeCategory === cat;
+                  const count =
+                    cat === 'All'
+                      ? PORTFOLIO_DATA.length
+                      : PORTFOLIO_DATA.filter((p) => p.category === cat).length;
+
+                  return (
+                    <button
+                      key={cat}
+                      id={`filter-pill-${cat.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                      onClick={(e) => handleSelectCategory(cat, e)}
+                      className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 flex items-center gap-1.5 cursor-pointer ${
+                        isActive
+                          ? 'bg-[#1E2229] text-white shadow-xs scale-[1.02]'
+                          : 'bg-[#FAF9F6] text-[#5D554B] border border-[#E2D9CB] hover:border-[#C5A880] hover:text-[#1E2229] hover:bg-white'
+                      }`}
+                    >
+                      <span>{cat}</span>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-[#ECE5D8] text-[#7A6F62]'
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Scroll Right Button */}
+              <button
+                type="button"
+                onClick={() => handleScroll('right')}
+                disabled={!canScrollRight}
+                aria-label="Scroll categories right"
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all border ${
+                  canScrollRight
+                    ? 'bg-white hover:bg-[#1E2229] hover:text-white text-[#5D554B] border-[#D8CEBC] shadow-2xs hover:scale-105 active:scale-95 cursor-pointer'
+                    : 'bg-[#F7F4EE] text-[#C4BBAF] border-[#E8DFC8] opacity-40 cursor-default'
+                }`}
+                title="Scroll right to see all categories"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 

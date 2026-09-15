@@ -1,7 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { PageId, InteriorCategory } from '../types';
+import React, { useEffect, useState, useRef } from 'react';
+import { PageId, ServiceItem } from '../types';
 import { SERVICES_DATA, STUDIO_INFO, CATEGORIES_LIST } from '../data/interiorData';
-import { CheckCircle2, Clock, ShieldCheck, ArrowRight, Sparkles, MessageCircle, Layers, Tag, ChevronRight } from 'lucide-react';
+import {
+  Clock,
+  ShieldCheck,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+  Palette,
+  LayoutGrid,
+  SunDim,
+  Lightbulb,
+  Compass,
+  MessageCircle,
+} from 'lucide-react';
 
 interface ServicesPageProps {
   onNavigate: (page: PageId) => void;
@@ -15,6 +28,39 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
   targetServiceId,
 }) => {
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('All');
+
+  // Horizontal scroll controls for category tabs
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = () => {
+    if (tabsContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+      setCanScrollLeft(scrollLeft > 4);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 4);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = tabsContainerRef.current;
+    if (el) el.addEventListener('scroll', checkScroll, { passive: true });
+    window.addEventListener('resize', checkScroll);
+    return () => {
+      if (el) el.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, []);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (tabsContainerRef.current) {
+      tabsContainerRef.current.scrollBy({
+        left: direction === 'left' ? -220 : 220,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   useEffect(() => {
     if (targetServiceId) {
@@ -30,49 +76,108 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
     onNavigate('contact');
   };
 
-  const scrollToService = (serviceId: string) => {
-    const el = document.getElementById(`service-card-${serviceId}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const getServiceIcon = (id: string) => {
+    switch (id) {
+      case 'wall-paneling-louvers':
+        return <Layers className="w-4 h-4 text-[#C5A880]" />;
+      case 'designer-wallpapers':
+        return <Palette className="w-4 h-4 text-[#C5A880]" />;
+      case 'modular-kitchens-wardrobes':
+        return <LayoutGrid className="w-4 h-4 text-[#C5A880]" />;
+      case 'curtains-blinds-window':
+        return <SunDim className="w-4 h-4 text-[#C5A880]" />;
+      case 'false-ceilings-lighting':
+        return <Lightbulb className="w-4 h-4 text-[#C5A880]" />;
+      case 'turnkey-renovation':
+      default:
+        return <Compass className="w-4 h-4 text-[#C5A880]" />;
     }
   };
 
-  const displayedServices = activeCategoryFilter === 'All'
-    ? SERVICES_DATA
-    : SERVICES_DATA.filter((s) => s.category === activeCategoryFilter);
+  const displayedServices =
+    activeCategoryFilter === 'All'
+      ? SERVICES_DATA
+      : SERVICES_DATA.filter((s) => s.category === activeCategoryFilter);
 
   return (
-    <div className="py-12 sm:py-16 space-y-12">
-      {/* Header */}
+    <div className="py-10 sm:py-14 space-y-10 sm:space-y-14 selection:bg-[#C5A880]/20">
+      {/* ================= EDITORIAL HEADER ================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl">
-          <span className="text-xs uppercase tracking-widest text-[#8A6D47] font-bold block mb-2">
-            Signature Design & Execution
-          </span>
-          <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-[#1E2229] mb-4">
-            Signature Interior Services & Architectural Solutions
-          </h1>
-          <p className="text-base sm:text-lg text-[#554E45] leading-relaxed">
-            From architectural wall louvers and imported 3D wallpaper to ergonomic modular kitchens, motorized drapes, and complete turnkey transformations in Meerut.
-          </p>
-        </div>
-
-        {/* Categories Quick Filter & Navigation Bar */}
-        <div className="mt-8 pt-4 border-t border-[#E8E1D2]">
-          <div className="flex items-center gap-2 overflow-x-auto pb-3 custom-horizontal-scrollbar">
-            <span className="text-xs text-[#8A8174] font-semibold uppercase tracking-wider shrink-0 mr-2">
-              Categories:
+        <div className="border-b border-[#E5DEC7] pb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <span className="text-xs uppercase tracking-[0.2em] text-[#8C6D47] font-bold block">
+              Our Core Specializations
             </span>
+            <div className="flex items-center gap-2 text-xs text-[#7A6F62] bg-[#FAF6EE] px-3.5 py-1.5 rounded-full border border-[#E5DEC7]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#8C6D47]" />
+              <span>10-Year Hardware Warranty • Meerut NCR</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1E2229] leading-tight">
+                Signature Interior Design Services
+              </h1>
+              <p className="text-sm sm:text-base text-[#5D554B] mt-2 max-w-xl leading-relaxed">
+                Architectural planning, custom joinery, bespoke wall concepts, and turnkey fit-outs executed by master craftsmen in Meerut.
+              </p>
+            </div>
+
+            {/* Quick Metrics */}
+            <div className="flex items-center gap-5 text-xs font-semibold text-[#1E2229] shrink-0">
+              <div>
+                <span className="block text-xl font-bold font-serif-luxury text-[#8C6D47]">45 Days</span>
+                <span className="text-[#7A6F62] text-[11px]">Handover</span>
+              </div>
+              <div className="h-7 w-px bg-[#E5DEC7]" />
+              <div>
+                <span className="block text-xl font-bold font-serif-luxury text-[#8C6D47]">10-Yr</span>
+                <span className="text-[#7A6F62] text-[11px]">Warranty</span>
+              </div>
+              <div className="h-7 w-px bg-[#E5DEC7]" />
+              <div>
+                <span className="block text-xl font-bold font-serif-luxury text-[#8C6D47]">100%</span>
+                <span className="text-[#7A6F62] text-[11px]">Factory Made</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= CATEGORY FILTER TABS ================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2">
+          {/* Scroll Left Button */}
+          <button
+            type="button"
+            onClick={() => handleScroll('left')}
+            disabled={!canScrollLeft}
+            aria-label="Scroll services left"
+            className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all border ${
+              canScrollLeft
+                ? 'bg-white hover:bg-[#1E2229] hover:text-white text-[#5D554B] border-[#D8CEBC] shadow-2xs cursor-pointer'
+                : 'bg-[#F7F4EE] text-[#C4BBAF] border-[#E8DFC8] opacity-40 cursor-default'
+            }`}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Categories Track */}
+          <div
+            ref={tabsContainerRef}
+            className="custom-horizontal-scrollbar flex-1 flex items-center gap-2 overflow-x-auto pb-2 pt-1 scroll-smooth"
+          >
             <button
               id="services-cat-all"
               onClick={() => setActiveCategoryFilter('All')}
-              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all ${
+              className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all cursor-pointer ${
                 activeCategoryFilter === 'All'
-                  ? 'bg-[#1E2229] text-white shadow-sm'
+                  ? 'bg-[#1E2229] text-white shadow-xs'
                   : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
               }`}
             >
-              All Categories ({CATEGORIES_LIST.length})
+              All Services ({SERVICES_DATA.length})
             </button>
             {CATEGORIES_LIST.map((cat, cIdx) => {
               const isActive = activeCategoryFilter === cat;
@@ -81,9 +186,9 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                   key={cat}
                   id={`services-cat-btn-${cIdx}`}
                   onClick={() => setActiveCategoryFilter(cat)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all ${
+                  className={`whitespace-nowrap px-4 py-2 rounded-full text-xs font-semibold tracking-wide shrink-0 transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-[#1E2229] text-white shadow-sm'
+                      ? 'bg-[#1E2229] text-white shadow-xs'
                       : 'bg-white text-[#5D554B] border border-[#E0D7C8] hover:border-[#C5A880] hover:text-[#1E2229]'
                   }`}
                 >
@@ -91,132 +196,113 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
                 </button>
               );
             })}
-            <div className="w-4 shrink-0" aria-hidden="true" />
           </div>
+
+          {/* Scroll Right Button */}
+          <button
+            type="button"
+            onClick={() => handleScroll('right')}
+            disabled={!canScrollRight}
+            aria-label="Scroll services right"
+            className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all border ${
+              canScrollRight
+                ? 'bg-white hover:bg-[#1E2229] hover:text-white text-[#5D554B] border-[#D8CEBC] shadow-2xs cursor-pointer'
+                : 'bg-[#F7F4EE] text-[#C4BBAF] border-[#E8DFC8] opacity-40 cursor-default'
+            }`}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
-      {/* Services List */}
+      {/* ================= SERVICE CARDS (MATCHING INDEX PAGE) ================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-14">
-          {displayedServices.map((service, index) => {
-            const isReversed = index % 2 === 1;
-            const encodedWhatsAppMsg = encodeURIComponent(
-              service.whatsAppPrompt || `Hello Bharat Decor, I want to inquire about ${service.title} in Meerut.`
-            );
-            const whatsAppLink = `https://wa.me/${STUDIO_INFO.whatsappNumber}?text=${encodedWhatsAppMsg}`;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+          {displayedServices.map((service, sIdx) => {
+            const whatsAppServiceUrl = `https://wa.me/${STUDIO_INFO.whatsappNumber}?text=${encodeURIComponent(
+              service.whatsAppPrompt ||
+                `Hello Bharat Decor, I would like to inquire about your "${service.title}" service in Meerut.`
+            )}`;
 
             return (
               <div
                 key={service.id}
                 id={`service-card-${service.id}`}
-                className="bg-white rounded-2xl overflow-hidden border border-[#E4DDD0] shadow-sm hover:shadow-lg transition-all scroll-mt-28"
+                className="group bg-white rounded-2xl overflow-hidden border border-[#E5DEC7] hover:border-[#C5A880] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
               >
-                <div className={`grid grid-cols-1 lg:grid-cols-12 ${isReversed ? 'lg:flex-row-reverse' : ''}`}>
-                  {/* Visual column */}
-                  <div className={`lg:col-span-5 relative min-h-[320px] lg:min-h-[460px] bg-[#EDE8DE] ${isReversed ? 'lg:order-2' : ''}`}>
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
-                      }}
-                    />
-                    <div className="absolute top-4 left-4 bg-[#1E2229]/90 backdrop-blur-md text-[#FAF9F6] text-xs font-semibold px-3 py-1.5 rounded-md shadow-sm">
-                      {service.category}
+                {/* Visual Architectural Frame with Scrim & Icons */}
+                <div className="relative h-56 sm:h-60 w-full overflow-hidden bg-[#EDE8DE]">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src =
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#16191E]/85 via-[#16191E]/25 to-transparent pointer-events-none" />
+
+                  {/* Top Bar: Index Badge and Specialty Icon */}
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between">
+                    <span className="bg-[#1E2229]/85 backdrop-blur-md text-[#C5A880] border border-[#C5A880]/30 text-[10px] font-mono tracking-widest px-3 py-1 rounded-full uppercase">
+                      0{sIdx + 1} • Craft
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/25 flex items-center justify-center shadow-sm">
+                      {getServiceIcon(service.id)}
                     </div>
                   </div>
 
-                  {/* Details column */}
-                  <div className={`lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6 ${isReversed ? 'lg:order-1' : ''}`}>
-                    <div className="space-y-5">
-                      <div>
-                        <span className="text-xs font-semibold text-[#8A6D47] uppercase tracking-wider">
-                          {service.subtitle}
-                        </span>
-                        <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#1E2229] mt-1">
-                          {service.title}
-                        </h2>
+                  {/* Bottom Tags on Image Overlay */}
+                  <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between text-white">
+                    <span className="text-[11px] font-semibold tracking-wide text-white/95 bg-[#1E2229]/70 backdrop-blur-md px-2.5 py-0.5 rounded-md border border-white/10">
+                      {service.category}
+                    </span>
+                    <span className="text-[11px] font-semibold text-[#C5A880] flex items-center gap-1 bg-[#1E2229]/80 backdrop-blur-md px-2.5 py-0.5 rounded-md">
+                      <Clock className="w-3 h-3" />
+                      <span>{service.turnaroundTime}</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Minimal Card Content */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div>
+                    <h3
+                      onClick={() => handleInquire(service.title)}
+                      className="font-serif-luxury text-xl font-bold text-[#1E2229] group-hover:text-[#8A6D47] transition-colors cursor-pointer line-clamp-1"
+                    >
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-[#6B6357] mt-1.5 line-clamp-1 font-medium">
+                      {service.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Distinct Modern Interactive Footer Bar */}
+                  <div className="pt-3.5 border-t border-[#F0EBE0] flex items-center gap-2">
+                    <button
+                      id={`service-btn-${service.id}`}
+                      onClick={() => handleInquire(service.title)}
+                      className="flex-1 inline-flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-[#FAF8F5] group-hover:bg-[#1E2229] border border-[#E2DAD0] group-hover:border-[#1E2229] text-[#1E2229] group-hover:text-white transition-all text-xs font-semibold cursor-pointer"
+                    >
+                      <span>Book Consultation</span>
+                      <div className="w-6 h-6 rounded-full bg-[#EDE7DB] group-hover:bg-[#C5A880] text-[#1E2229] flex items-center justify-center transition-colors">
+                        <ArrowRight className="w-3 h-3" />
                       </div>
+                    </button>
 
-                      <p className="text-sm sm:text-base text-[#554E45] leading-relaxed">
-                        {service.description}
-                      </p>
-
-                      {/* Material Specs Showcase */}
-                      {service.materialSpecs && service.materialSpecs.length > 0 && (
-                        <div className="p-4 rounded-xl bg-[#FAF8F3] border border-[#EDE7DB] space-y-2">
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#8A6D47] uppercase tracking-wider">
-                            <Layers className="w-3.5 h-3.5 text-[#C5A880]" />
-                            <span>Material & Build Specifications:</span>
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {service.materialSpecs.map((spec, spIdx) => (
-                              <div key={spIdx} className="flex items-center gap-2 text-xs text-[#4A4237]">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880] shrink-0" />
-                                <span className="font-medium">{spec}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Feature Checklist */}
-                      <div className="space-y-2 pt-1">
-                        <span className="text-xs uppercase tracking-wider text-[#8A8174] font-bold block mb-2">
-                          Included Features & Execution:
-                        </span>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                          {service.features.map((feature, fIdx) => (
-                            <div key={fIdx} className="flex items-start gap-2 text-xs sm:text-sm text-[#383129]">
-                              <CheckCircle2 className="w-4 h-4 text-[#C5A880] shrink-0 mt-0.5" />
-                              <span>{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Metadata & Actions */}
-                    <div className="pt-6 border-t border-[#F0EBE0] space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#6B6357]">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-[#C5A880] shrink-0" />
-                          <span>Estimated Handover: <strong>{service.turnaroundTime}</strong></span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <ShieldCheck className="w-4 h-4 text-[#C5A880] shrink-0" />
-                          <span className="truncate">Highlight: <strong>{service.materialHighlight}</strong></span>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons: Direct WhatsApp + On-Site Consultation */}
-                      <div className="flex flex-wrap items-center gap-3 pt-2">
-                        <a
-                          id={`service-whatsapp-btn-${service.id}`}
-                          href={whatsAppLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-5 py-3 rounded-md text-sm font-semibold text-white bg-[#25D366] hover:bg-[#1EBE5D] transition-colors shadow-sm"
-                        >
-                          <MessageCircle className="w-4 h-4 fill-white text-white" />
-                          <span>Inquire via WhatsApp</span>
-                        </a>
-
-                        <button
-                          id={`inquire-btn-${service.id}`}
-                          onClick={() => handleInquire(service.title)}
-                          className="inline-flex items-center gap-2 px-5 py-3 rounded-md text-sm font-semibold text-[#1E2229] bg-[#EDE7DA] hover:bg-[#E2D9C8] border border-[#D5CEBF] transition-colors"
-                        >
-                          <Sparkles className="w-4 h-4 text-[#8A6D47]" />
-                          <span>Book Design Consultation</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#1E2229]" />
-                        </button>
-                      </div>
-                    </div>
+                    <a
+                      href={whatsAppServiceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl border border-[#D5CEBF] text-[#25D366] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-colors flex items-center justify-center"
+                      title={`Quick inquiry for ${service.title}`}
+                      aria-label="WhatsApp Inquiry"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -225,20 +311,20 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({
         </div>
       </section>
 
-      {/* Bottom Consultation Promo */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="bg-[#FAF6EE] rounded-2xl p-8 sm:p-10 border border-[#E5DEC7] flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-2">
-            <h3 className="font-serif-luxury text-2xl font-bold text-[#1E2229]">
-              Need a Custom Combination or Multi-Room Package?
+      {/* ================= BOTTOM SITE VISIT BANNER ================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <div className="bg-[#1E2229] rounded-3xl p-8 sm:p-10 text-white flex flex-col sm:flex-row items-center justify-between gap-6 border border-[#3A404D] shadow-xl">
+          <div className="space-y-1.5 text-center sm:text-left">
+            <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white">
+              Planning a Project in Meerut?
             </h3>
-            <p className="text-sm text-[#5D554B]">
-              Schedule a comprehensive on-site assessment anywhere in Meerut with material samples brought to your doorstep.
+            <p className="text-xs sm:text-sm text-[#C8C0B4] max-w-lg">
+              Book a site visit with material catalogs brought to your location. Free laser measurement and 3D consultation included.
             </p>
           </div>
           <button
             onClick={() => onNavigate('contact')}
-            className="shrink-0 px-6 py-3.5 rounded-md text-sm font-semibold text-[#1E2229] bg-[#C5A880] hover:bg-[#D4B996] transition-colors shadow-sm"
+            className="shrink-0 px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-[#1E2229] bg-[#C5A880] hover:bg-[#b5966d] transition-all shadow-md active:scale-95"
           >
             Book Free Site Visit
           </button>
